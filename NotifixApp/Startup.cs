@@ -22,6 +22,7 @@ namespace NotifixApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -37,14 +38,9 @@ namespace NotifixApp
                 app.UseExceptionHandler("/Home/Error");
             }
 
+       
             app.UseStaticFiles();
-
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
-            });
+            app.UseMvc();
         }
     }
 }
