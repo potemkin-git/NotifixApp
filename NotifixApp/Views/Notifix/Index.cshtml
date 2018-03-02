@@ -1,0 +1,106 @@
+﻿@{
+    ViewData["Title"] = "Notifix Home Page";
+}
+
+@section Css {
+    <link rel="stylesheet" href="~/css/index.css">
+}
+
+
+<a id="addEvent" class="btn-floating waves-effect waves-light red tooltipped pulse" data-position="top" data-delay="50" data-tooltip="Declare an incident"><i class="material-icons">add</i></a>
+
+<div class="fixed-action-btn horizontal click-to-toggle mainmenuDiv">
+    <a id="mainmenuBtn" class="btn-floating btn-large spinner-blue">
+        <i class="material-icons">menu</i>
+    </a>
+    <ul>
+        <li><a href="/login" id="loginBtn" class="waves-effect waves-light btn spinner-blue white-text"><i class="large material-icons left">account_box</i>Log in</a></li>
+        <li><a id="settingsBtn" class="waves-effect waves-light btn spinner-blue white-text"><i class="large material-icons left">settings</i>Account</a></li>
+        <li><a onclick="unsetCookie()" href="/login" id="logOutBtn" class="waves-effect waves-light btn spinner-blue white-text"><i class="large material-icons left">power_settings_new</i></a></li>
+    </ul>
+</div>
+
+
+<nav id="toggleFilter">
+    <img id="toggleFilterBtn" src="~/images/toggleBtn.png" alt="">
+    <div id="filterCheckbox" class="switch">
+        <p>Display traffic jams</p>
+        <label>Off<input type="checkbox" id="jamFilter" checked="checked" /><span class="lever"></span>On</label>
+
+        <p>Display car accidents</p>
+        <label>Off<input type="checkbox" id="accidentFilter" checked="checked" /><span class="lever"></span>On</label>
+
+        <p>Display police checkpoints</p>
+        <label>Off<input type="checkbox" id="policeFilter" checked="checked" /><span class="lever"></span>On</label>
+    </div>
+</nav>
+
+<div id="map"></div>
+<input type="text" id="searchInput" class="controls" placeholder="Search for a place">
+
+
+<div id="addNotif" class="modal modal-fixed-footer">
+    <div class="modal-content">
+        <h4 class="createMode">What did you notice?</h4>
+        <h4 class="editMode">Edit my notification</h4>
+        <div class="row">
+            <form id="formNotif" class="col s12" action="#">
+
+                <div class="row">
+                    <div class="col s10 offset-s1">
+                        <div id="imgTypes">
+                            <label>Accident<img id="accident" class="typeSelection" type="image" src="~/images/accident.png"></label>
+                            <label>Traffic<img id="jam" class="typeSelection" type="image" src="~/images/jam.png"></label>
+                            <label>Police<img id="police" class="typeSelection" type="image" src="~/images/police.png"></label>
+                        </div>
+                        <input id="resultType" type="text" style="display: none;">
+                    </div>
+                </div>
+
+                <div id="optionalSearchInput" class="row">
+                    <div id="coordChoice" class="col s10 offset-s1">
+                        <p>Locate my event using:</p>
+                        <p><input name="coordType" type="radio" id="address" class="with-gap" checked /><label for="address">Address</label></p>
+                        <p><input name="coordType" type="radio" id="gps" class="with-gap" /><label for="gps">GPS</label></p>
+                    </div>
+
+                    <div id="optionalAddressInput" class="input-field col s8 offset-s2">
+                        <input type="text" id="searchInputModal" class="controls" placeholder="Search for a place">
+                        <input id="coordsData" data-lat="" data-long="" type="text" style="display: none;">
+                    </div>
+                    <div id="optionnalLatLngInput" class="input-field col s12">
+                        <input type="text" id="latForm" class="coordForm col s3 offset-s2" placeholder="Latitude">
+                        <input type="text" id="lngForm" class="coordForm col s3 offset-s2" placeholder="Longitude">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col s12">
+                        <input id="dateInput" type="text" class="datepicker col s3 offset-s2" placeholder="When will it end?">
+                        <input id="timeInput" type="text" class="timepicker col s3 offset-s2" placeholder="At what time?">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s10 offset-s1">
+                        <textarea placeholder="Description" id="descEvent" class="materialize-textarea" type="text" wrap="hard" data-length="100"></textarea>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a href="#!" id="saveModal" class="modal-action modal-close waves-effect waves-green btn"><i class="medium material-icons left">check_circle</i>Save</a>
+        <a href="#!" id="cancelModal" class="modal-action modal-close waves-effect waves-red btn"><i class="medium material-icons left">cancel</i>Cancel</a>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script src="~/js/index.js"></script>
+    <script src="~/js/eventListeners.js"></script>
+    <script src="~/js/init.js"></script>
+    <script src="~/js/Notification.js"></script>
+    <script src="~/js/dataFakerLoadixRendererV1.js"></script>
+}
+
+
