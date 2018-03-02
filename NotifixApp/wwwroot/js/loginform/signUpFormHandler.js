@@ -27,35 +27,38 @@ $("#signup form").submit(function (event) {
     else if (!validateEmail(email))
         msgError = "Invalid email address";
     else if (pwd.length < 8)
-        msgError = "Password must have 5 characters or more";
+        msgError = "Password must have 8 characters or more";
     else validInputs = true;
 
     if (!validInputs || msgError != "") {
         $("#signUpErrorMsg").text(msgError).show();
     } else {
-        isLoginUsed(login).then(function (result) {
-            if (result == "200") {
+        isLoginorEmailUsed(login, email).then(function (resultCheck) {
+            console.log(resultCheck);
+            if (resultCheck == "403login") {
                 $("#signUpErrorMsg").text("Login already used, please choose another").show();
-            } else {
-                isPasswordUsed(pwd).then(function (result) {
-                    if (result != "404") {
-                        $("#signUpErrorMsg").text("Login already used, please choose another").show();
-                    } else {
-
-                        registerUser(new User(null, fName, lName, login, email, pwd, city, address, avatarSrc)).then(function (result) {
-                            if (result == "200") {
-                                allowed = true;
-                                // @todo set cookie
-                            }
-                        }).catch(function (err) {
-                            console.error('Error:' + err);
-                        });
+            } else if (resultCheck == "403pwd") {
+                $("#signUpErrorMsg").text("Email already used, please choose another").show();
+            }
+            else if (resultCheck == "200"){
+                registerUser(fName, lName, login, email, pwd, city, address, avatarSrc).then(function (resultCreate) {
+                    console.log(resultCreate);
+                    let code = resultCreate.substr(0, 3);
+                    let hash = resultCreate.substr(3);
+                    if (code == "200") {
+                        allowed = true;
+                        $("#signUpErrorMsg").text("").hide();
+                        let date = new Date();
+                        date.setMonth(date.getMonth() + 1);
+                        document.cookie = "login=" + login + "; expires=" + date + "; path=/";
+                        document.cookie = "hash=" + hash + "; expires=" + date + "; path=/";
+                        window.location.href = '/';
+                    } else if (code == "404") {
+                        $("#signUpErrorMsg").text("Account creation failed").show();
                     }
                 }).catch(function (err) {
                     console.error('Error:' + err);
                 });
-
-
             }
         }).catch(function (err) {
             console.error('Error:' + err);

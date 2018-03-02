@@ -3,6 +3,12 @@ var jamLayer, accidentLayer, policeLayer, masterLayer = [];
 
 var cookieSub = document.cookie.substring(document.cookie.indexOf("login"));
 var login = cookieSub.substring(cookieSub.indexOf("=") + 1, cookieSub.indexOf(";"));
+var hashSub = document.cookie.substring(document.cookie.indexOf("hash"));
+var hash = hashSub.substring(hashSub.indexOf("=") + 1);
+console.log('init');
+console.log(login);
+console.log(hash);
+
 $("#logOutBtn").text(login == '' ? 'Anonymous' : login);
 
 

@@ -11,7 +11,6 @@ function loginSubmit() {
     const pwd = $("#login #pwdInput").val();
     if (login !== "" && pwd !== "") {
         loginPasswordMatch(login, pwd).done(function (result) {
-            console.log(result);
             let code = result.substr(0, 3);
             let hash = result.substr(3);
             if (code == "403") {
