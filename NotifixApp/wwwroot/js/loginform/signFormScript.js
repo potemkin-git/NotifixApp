@@ -70,3 +70,8 @@ function addMask() {
     $('html').append("<div id='mask'></div>");
     $('#mask').css({"position":"fixed", "top":"0", "left":"0", "width":"100vw", "height":"100vh", "background-color":"rgba(0,0,0,0.8)"});
 }
+
+function validateEmail(email) {
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email);
+}

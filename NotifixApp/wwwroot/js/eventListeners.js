@@ -59,7 +59,7 @@ function loadListeners() {
 // Save button fetch form information & adds marker
     $('#saveModal').click(function () {
         let notification = getFormInfo();
-        addMarker(notification);
+        addMarker(notification, false);
     });
 
 // Filter sidebar Pull/Push
@@ -112,14 +112,6 @@ function loadListeners() {
         }
     });
 
-    //// Menu actions
-    //$('#loginBtn').click(function () {
-    //    window.location.replace("login");
-    //});
-
-    //$('#settingsBtn').click(function () {
-
-    //});
 }
 
 

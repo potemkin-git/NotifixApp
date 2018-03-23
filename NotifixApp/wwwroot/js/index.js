@@ -19,7 +19,7 @@ $(document).ready(function () {
         cleartext: 'Clear', // text for clear-button
         canceltext: 'Cancel', // Text for cancel-button
         autoclose: true, // automatic close timepicker
-        ampmclickable: true, // make AM PM clickable
+        //ampmclickable: true, // make AM PM clickable
     });
 });
 
@@ -28,7 +28,7 @@ function getFormInfo() {
     infos.type = $('#resultType').val();
     infos.lat = $('#latForm').val();
     infos.lng = $('#lngForm').val();
-    infos.date = $('#dateInput').val() /*.pickadate()*/;
+    infos.date = $('#dateInput').val();
     infos.time = $('#timeInput').val();
     infos.desc = $('#descEvent').val();
     $('#descEvent').trigger('autoresize');
@@ -47,7 +47,7 @@ function getFormInfo() {
         }
     }
 
-    return new Notification(null, null, infos.type, infos.desc, infos.date, infos.time, currLat, currLong, null);
+    return new Notification(null, getCookie('hash'), infos.type, infos.desc, infos.date, infos.time, currLat, currLong, 0, 0);
 }
 
 function clearForm() {
@@ -56,38 +56,56 @@ function clearForm() {
     $('.typeSelection').removeClass('active');
 }
 
-function addMarker(notif) {
+function addMarker(notif, fromDb) {
 
-    let editable = (notif.userId == userId) ? '<a id="editNotif" class="btn-floating"><i class="material-icons">edit</i></a>' : "";
+    if (fromDb) {
+        createMarker(notif);
+    } else
+    {
+        saveNotification(notif).done(function (result) {
+            if (result == 0) {
+                Materialize.toast("Saving an event is forbidden as anonymous!", 2000, "rounded");
+            } else {
+                createMarker(notif);
+            }
+        }).fail(function (result) {
+            console.log(result.responseText)
+            Materialize.toast("Service is not callable, please retry later.", 2000, "rounded");
+        });    
+    }    
+}
+
+function createMarker(notif) {
+    let editable = (notif.userToken == getCookie('hash')) ? '<a id="editNotif" class="btn-floating"><i class="material-icons">edit</i></a>' : "";
 
     let menu = '<a id="thumbUp" class="btn-floating green"><i class="material-icons">thumb_up</i></a>' +
-               '<a id="thumbDown" class="btn-floating red"><i class="material-icons">thumb_down</i></a>' +
-                editable;
+        '<a id="thumbDown" class="btn-floating red"><i class="material-icons">thumb_down</i></a>' +
+        editable;
 
-    let infowindowData = "<div class='infowindow'>"+
-        "<p>Event type: " + notif.type + "</p>"+
-        "<p>" + notif.desc + "</p>"+
-        "<p>Date: " + notif.date + "  &  Time: " + notif.time +"</p>"+
+    let infowindowData = "<div class='infowindow'>" +
+        "<p>Event type: " + notif.type + "</p>" +
+        "<p>" + notif.desc + "</p>" +
+        "<p>Date: " + notif.date + "  &  Time: " + notif.time + "</p>" +
         "<p id='iw-menu'>" + menu + "</p>" +
         "</div>";
 
-    let infowindowShortData = "<div class='infowindowShort'>"+
-        "<p>Type: " + notif.type + "</p>"+
-        "<p>Description: " + notif.desc + "</p>"+
-        "<p>Approved by " + notif.nbConf + " people</p>"+
-        "<p>Disapproved by " + notif.nbDeny + " people</p>"+
+    let infowindowShortData = "<div class='infowindowShort'>" +
+        "<p>Type: " + notif.type + "</p>" +
+        "<p>Description: " + notif.desc + "</p>" +
+        "<p>Approved by " + notif.nbConf + " people</p>" +
+        "<p>Disapproved by " + notif.nbDeny + " people</p>" +
         "</div>";
 
-    let infowindow = new google.maps.InfoWindow({pixelOffset: new google.maps.Size(0, -30), maxWidth: 350});
+    let infowindow = new google.maps.InfoWindow({ pixelOffset: new google.maps.Size(0, -30), maxWidth: 350 });
     infowindow.setContent(infowindowData);
     infowindow.setPosition(notif.coord);
 
-    let infowindowShort = new google.maps.InfoWindow({pixelOffset: new google.maps.Size(0, -30)});
+    let infowindowShort = new google.maps.InfoWindow({ pixelOffset: new google.maps.Size(0, -30) });
     infowindowShort.setContent(infowindowShortData);
     infowindowShort.setPosition(notif.coord);
 
     let marker = new google.maps.Data.Feature({
-        geometry: notif.coord,
+        geometry: { lat: parseFloat(notif.lat), lng: parseFloat(notif.lng) },
         properties: {
             infoWindow: infowindow,
             infoWindowShort: infowindowShort,
@@ -107,11 +125,30 @@ function addMarker(notif) {
             break;
     }
 
-    map.panTo(notif.coord);
+    map.panTo({ lat: parseFloat(notif.lat), lng: parseFloat(notif.lng) });
     map.setZoom(17);
 }
 
-
 function unsetCookie() {
+    document.cookie = "login=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    document.cookie = "hash=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    Materialize.toast("Disconnecting...", 2000, "rounded", function () {
+        window.location.reload();
+    });
+}
 
+function getCookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
 }

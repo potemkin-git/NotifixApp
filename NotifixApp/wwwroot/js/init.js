@@ -1,16 +1,12 @@
-var map, infoopened, infoclosed = true, userId = 42;
+var map, infoOpened, infoClosed = true;
 var jamLayer, accidentLayer, policeLayer, masterLayer = [];
-
-var cookieSub = document.cookie.substring(document.cookie.indexOf("login"));
-var login = cookieSub.substring(cookieSub.indexOf("=") + 1, cookieSub.indexOf(";"));
-var hashSub = document.cookie.substring(document.cookie.indexOf("hash"));
-var hash = hashSub.substring(hashSub.indexOf("=") + 1);
-console.log('init');
+var login = getCookie('login');
+var hash = getCookie('hash');
+console.log('Cookies=');
 console.log(login);
 console.log(hash);
-
-$("#logOutBtn").text(login == '' ? 'Anonymous' : login);
-
+Materialize.toast("Connected as: " + (login.length > 0 ? login : "Anonymous"), 2000, "rounded");
+$("#logOutBtn").append(login == '' ? 'Anonymous' : login);
 
 function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
@@ -110,11 +106,15 @@ function initLayers() {
             let infowindowShort = elem.feature.getProperty('infoWindowShort');
             let notif = elem.feature.getProperty('notif');
 
-            if (typeof( window.infoopened ) != 'undefined') infoopened.close();
+            if (typeof (window.infoopened) != 'undefined')
+            {
+                infoOpened.close();
+            }
+
             infowindow.open(map);
             infowindowShort.close();
-            infoopened = infowindow;
-            infoclosed = false;
+            infoOpened = infowindow;
+            infoClosed = false;
 
             google.maps.event.addListener(infowindow, 'domready', function () {
                 $('#thumbUp').click(function () {
@@ -141,17 +141,17 @@ function initLayers() {
 
             google.maps.event.addListener(map, 'click', function() {
                 infowindow.close();
-                infoclosed = true;
+                infoClosed = true;
 
             });
 
             google.maps.event.addListener(infowindow, 'closeclick', function () {
-                infoclosed = true;
+                infoClosed = true;
             });
         });
 
         layer.addListener('mouseover', function (elem) {
-            if (!infoclosed) return;
+            if (!infoClosed) return;
             let infowindowShort = elem.feature.getProperty('infoWindowShort');
             infowindowShort.open(map);
         });
@@ -165,5 +165,13 @@ function initLayers() {
 }
 
 initMap();
+
+getAllNotifications().done(function (data) {
+    for (let key in data) {
+        let item = data[key];
+        let notif = new Notification(null, item.userToken, item.type, item.desc, item.date, item.time, item.lat, item.lng, item.nbConf, item.nbDeny);
+        addMarker(notif, true);
+    }
+});
 
 

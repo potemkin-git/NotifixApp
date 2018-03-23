@@ -14,9 +14,9 @@
         <i class="material-icons">menu</i>
     </a>
     <ul>
-        <li><a href="/login" id="loginBtn" class="waves-effect waves-light btn spinner-blue white-text"><i class="large material-icons left">account_box</i>Log in</a></li>
+        <li><a id="loginBtn" class="waves-effect waves-light btn spinner-blue white-text" href="/login"><i class="large material-icons left">account_box</i>Log in</a></li>
         <li><a id="settingsBtn" class="waves-effect waves-light btn spinner-blue white-text"><i class="large material-icons left">settings</i>Account</a></li>
-        <li><a onclick="unsetCookie()" href="/login" id="logOutBtn" class="waves-effect waves-light btn spinner-blue white-text"><i class="large material-icons left">power_settings_new</i></a></li>
+        <li><a id="logOutBtn" class="waves-effect waves-light btn spinner-blue white-text" onclick="unsetCookie()" href="#" ><i class="large material-icons left">exit_to_app</i></a></li>
     </ul>
 </div>
 
@@ -96,11 +96,11 @@
 
 
 @section Scripts {
+    <script src="~/js/WSinterface.js"></script>
     <script src="~/js/index.js"></script>
     <script src="~/js/eventListeners.js"></script>
     <script src="~/js/init.js"></script>
     <script src="~/js/Notification.js"></script>
-    <script src="~/js/dataFakerLoadixRendererV1.js"></script>
 }
 
 
