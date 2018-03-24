@@ -16,7 +16,8 @@ namespace NotifixApp
     {
         public static void Main(string[] args)
         {
-            BuildWebHost(args).Run(); //TOTO BONJOUR CA VA?
+            BuildWebHost(args).Run(); //TOTO BIJOURRE
+        }
 
         } // toto
 
