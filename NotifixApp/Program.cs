@@ -18,6 +18,8 @@ namespace NotifixApp
         {
             BuildWebHost(args).Run(); //TOTO BONJOUR CA VA?
 
+        } // toto
+
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
