@@ -103,7 +103,7 @@ function initLayers() {
             let infowindowShort = elem.feature.getProperty('infoWindowShort');
             let notif = elem.feature.getProperty('notif');
             
-            if (typeof (window.infoopened) != 'undefined')
+            if (typeof (window.infoOpened) != 'undefined')
             {
                 infoOpened.close();
             }
