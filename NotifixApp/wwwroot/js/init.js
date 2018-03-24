@@ -2,11 +2,8 @@ var map, infoOpened, infoClosed = true;
 var jamLayer, accidentLayer, policeLayer, masterLayer = [];
 var login = getCookie('login');
 var hash = getCookie('hash');
-console.log('Cookies=');
-console.log(login);
-console.log(hash);
 Materialize.toast("Connected as: " + (login.length > 0 ? login : "Anonymous"), 2000, "rounded");
-$("#logOutBtn").append(login == '' ? 'Anonymous' : login);
+$("#logOutBtn").append((login == '' || typeof login == 'undefined') ? 'Anonymous' : login);
 
 function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
@@ -95,7 +92,7 @@ function initLayers() {
             return {
                 icon: {
                     url: "../images/"+feature.getProperty('notif').type+".png",
-                    scaledSize: new google.maps.Size(40, 40)
+                    scaledSize: new google.maps.Size(30, 30)
                 },
                 cursor: 'pointer'
             }
@@ -105,14 +102,13 @@ function initLayers() {
             let infowindow = elem.feature.getProperty('infoWindow');
             let infowindowShort = elem.feature.getProperty('infoWindowShort');
             let notif = elem.feature.getProperty('notif');
-
+            
             if (typeof (window.infoopened) != 'undefined')
             {
                 infoOpened.close();
             }
 
             infowindow.open(map);
-            map.setZoom(15);
             infowindowShort.close();
             infoOpened = infowindow;
             infoClosed = false;

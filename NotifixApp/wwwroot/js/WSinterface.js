@@ -24,6 +24,8 @@ function registerUser(fName, lName, login, email, pwd, city, address, avatarSrc)
 }
 
 function saveNotification(notification) {
+
+    let hashEsc = encodeURIComponent(hash);
     let notifAsJson = JSON.stringify({
         'type': notification.type,
         'description': notification.desc,
@@ -33,8 +35,9 @@ function saveNotification(notification) {
         'nbConf': 0,
         'nbDeny': 0,
         'login': login,
-        'hash': hash 
+        'hash': hashEsc
     });
+
     return $.post(baseUrl + "savenotification", "=" + notifAsJson);
 }
 

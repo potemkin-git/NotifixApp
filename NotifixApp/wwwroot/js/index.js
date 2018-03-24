@@ -59,14 +59,14 @@ function clearForm() {
 function addMarker(notif, fromDb) {
 
     if (fromDb) {
-        createMarker(notif);
+        createMarker(notif, fromDb);
     } else
     {
         saveNotification(notif).done(function (result) {
             if (result == 0) {
                 Materialize.toast("Saving an event is forbidden as anonymous!", 2000, "rounded");
             } else {
-                createMarker(notif);
+                createMarker(notif, fromDb);
             }
         }).fail(function (result) {
             console.log(result.responseText)
@@ -75,7 +75,7 @@ function addMarker(notif, fromDb) {
     }    
 }
 
-function createMarker(notif) {
+function createMarker(notif, fromDb) {
     let editable = (notif.userToken == getCookie('hash')) ? '<a id="editNotif" class="btn-floating"><i class="material-icons">edit</i></a>' : "";
 
     let menu = '<a id="thumbUp" class="btn-floating green"><i class="material-icons">thumb_up</i></a>' +
@@ -98,11 +98,11 @@ function createMarker(notif) {
 
     let infowindow = new google.maps.InfoWindow({ pixelOffset: new google.maps.Size(0, -30), maxWidth: 350 });
     infowindow.setContent(infowindowData);
-    infowindow.setPosition(notif.coord);
+    infowindow.setPosition({ lat: parseFloat(notif.lat), lng: parseFloat(notif.lng) });
 
     let infowindowShort = new google.maps.InfoWindow({ pixelOffset: new google.maps.Size(0, -30) });
     infowindowShort.setContent(infowindowShortData);
-    infowindowShort.setPosition(notif.coord);
+    infowindowShort.setPosition({ lat: parseFloat(notif.lat), lng: parseFloat(notif.lng) });
 
     let marker = new google.maps.Data.Feature({
         geometry: { lat: parseFloat(notif.lat), lng: parseFloat(notif.lng) },
@@ -125,8 +125,11 @@ function createMarker(notif) {
             break;
     }
 
-    map.panTo({ lat: parseFloat(notif.lat), lng: parseFloat(notif.lng) });
-    map.setZoom(17);
+    if (!fromDb) {
+        map.panTo({ lat: parseFloat(notif.lat), lng: parseFloat(notif.lng) });
+        map.setZoom(17);
+    }
+
 }
 
 function unsetCookie() {
