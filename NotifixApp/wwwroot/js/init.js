@@ -112,6 +112,7 @@ function initLayers() {
             }
 
             infowindow.open(map);
+            map.setZoom(15);
             infowindowShort.close();
             infoOpened = infowindow;
             infoClosed = false;
