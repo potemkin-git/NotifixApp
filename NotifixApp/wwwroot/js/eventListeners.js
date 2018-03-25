@@ -58,8 +58,14 @@ function loadListeners() {
 
 // Save button fetch form information & adds marker
     $('#saveModal').click(function () {
-        let notification = getFormInfo();
-        addMarker(notification, false);
+        if (!asAnonymous) {
+            let notification = getFormInfo();
+            addMarker(notification, false);
+        } else {
+            var $toastContent = $('<span>You need to be logged in to perform this action!</span>').add($('<a class="btn-flat toast-action" href="/login">Create my account</a>'));
+            Materialize.toast($toastContent, 10000);
+            return;
+        }
     });
 
 // Filter sidebar Pull/Push

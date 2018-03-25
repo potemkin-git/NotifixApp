@@ -33,7 +33,7 @@ $("#signup form").submit(function (event) {
     if (!validInputs || msgError != "") {
         $("#signUpErrorMsg").text(msgError).show();
     } else {
-        isLoginorEmailUsed(login, email).then(function (resultCheck) {
+        isLoginorEmailUsed(login, email).done(function (resultCheck) {
             console.log(resultCheck);
             if (resultCheck == "403login") {
                 $("#signUpErrorMsg").text("Login already used, please choose another").show();
@@ -41,7 +41,7 @@ $("#signup form").submit(function (event) {
                 $("#signUpErrorMsg").text("Email already used, please choose another").show();
             }
             else if (resultCheck == "200"){
-                registerUser(fName, lName, login, email, pwd, city, address, avatarSrc).then(function (resultCreate) {
+                registerUser(fName, lName, login, email, pwd, city, address, avatarSrc).done(function (resultCreate) {
                     console.log(resultCreate);
                     let code = resultCreate.substr(0, 3);
                     let hash = resultCreate.substr(3);

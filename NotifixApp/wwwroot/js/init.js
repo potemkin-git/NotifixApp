@@ -2,8 +2,15 @@ var map, infoOpened, infoClosed = true;
 var jamLayer, accidentLayer, policeLayer, masterLayer = [];
 var login = getCookie('login');
 var hash = getCookie('hash');
+var asAnonymous = false;
+if (login == '' || typeof login == 'undefined') {
+    login = 'Anonymous';
+    asAnonymous = true;
+}
+$("#logOutBtn").append(login);
+
+
 Materialize.toast("Connected as: " + (login.length > 0 ? login : "Anonymous"), 2000, "rounded");
-$("#logOutBtn").append((login == '' || typeof login == 'undefined') ? 'Anonymous' : login);
 
 function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
@@ -114,11 +121,40 @@ function initLayers() {
             infoClosed = false;
 
             google.maps.event.addListener(infowindow, 'domready', function () {
-                $('#thumbUp').click(function () {
-                    notif.nbConf++;
-                });
-                $('#thumbDown').click(function () {
-                    notif.nbDeny++;
+                $('#thumbUp, #thumbDown').off().click(function () {
+
+                    if (asAnonymous) {
+                        var $toastContent = $('<span>You need to be logged in to perform this action!</span>').add($('<a class="btn-flat toast-action" href="/login">Create my account</a>'));
+                        Materialize.toast($toastContent, 10000);
+                        return;
+                    }
+
+                    let voteValue, indexToReplace, newInfoWindowShort;
+                    let iwsContent = infowindowShort.getContent();
+                    if ($(this).attr('id') == "thumbUp") {
+                        voteValue = 1;
+                        indexToReplace = iwsContent.indexOf("Approved by ") + "Approved by ".length;
+                        let firstPart = iwsContent.substring(0, indexToReplace);
+                        let lastPart = iwsContent.substring(indexToReplace + notif.nbConf.toString().length, iwsContent.length);
+                        notif.nbConf++;
+                        newInfoWindowShort = firstPart + notif.nbConf +" "+ lastPart;
+                    } else {
+                        voteValue = -1;
+                        let indexAfterRep = (indexToReplace + notif.nbDeny.toString().length) + 1;
+                        indexToReplace = iwsContent.indexOf("Disapproved by ") + "Disapproved by ".length;
+                        let firstPart = iwsContent.substring(0, indexToReplace);
+                        let lastPart = iwsContent.substring(indexToReplace + notif.nbDeny.toString().length, iwsContent.length);
+                        notif.nbDeny++;
+                        newInfoWindowShort = firstPart + notif.nbDeny + " " + lastPart;
+                    }
+
+                    infowindowShort.setContent(newInfoWindowShort);
+
+                    notificationVote(notif.id, voteValue).done(function (res) {
+                        Materialize.toast("Thanks for voting!", 2000, "rounded");
+                    }).fail(function (res) {
+                        console.log(res.responseText);
+                    });
                 });
 
                 // Button from infoWindow that opens the notification edition modal window
@@ -166,7 +202,7 @@ initMap();
 getAllNotifications().done(function (data) {
     for (let key in data) {
         let item = data[key];
-        let notif = new Notification(null, item.userToken, item.type, item.desc, item.date, item.time, item.lat, item.lng, item.nbConf, item.nbDeny);
+        let notif = new Notification(item.id, item.userToken, item.type, item.desc, item.date, item.time, item.lat, item.lng, item.nbConf, item.nbDeny);
         addMarker(notif, true);
     }
 });

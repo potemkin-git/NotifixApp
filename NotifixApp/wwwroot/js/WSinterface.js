@@ -24,7 +24,6 @@ function registerUser(fName, lName, login, email, pwd, city, address, avatarSrc)
 }
 
 function saveNotification(notification) {
-
     let hashEsc = encodeURIComponent(hash);
     let notifAsJson = JSON.stringify({
         'type': notification.type,
@@ -39,6 +38,10 @@ function saveNotification(notification) {
     });
 
     return $.post(baseUrl + "savenotification", "=" + notifAsJson);
+}
+
+function notificationVote(notifid, voteValue) {
+    return $.post(baseUrl + "votenotification", "=" + JSON.stringify({ 'notifId': notifid, 'vote': voteValue, 'userLogin': login }));
 }
 
 function getAllNotifications() {

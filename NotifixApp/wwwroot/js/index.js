@@ -67,6 +67,9 @@ function addMarker(notif, fromDb) {
                 Materialize.toast("Saving an event is forbidden as anonymous!", 2000, "rounded");
             } else {
                 createMarker(notif, fromDb);
+                Materialize.toast("Successfuly saved!", 2000, "rounded", function () {
+                    window.location.reload();
+                });
             }
         }).fail(function (result) {
             console.log(result.responseText)
@@ -76,17 +79,18 @@ function addMarker(notif, fromDb) {
 }
 
 function createMarker(notif, fromDb) {
-    let editable = (notif.userToken == getCookie('hash')) ? '<a id="editNotif" class="btn-floating"><i class="material-icons">edit</i></a>' : "";
 
-    let menu = '<a id="thumbUp" class="btn-floating green"><i class="material-icons">thumb_up</i></a>' +
-        '<a id="thumbDown" class="btn-floating red"><i class="material-icons">thumb_down</i></a>' +
-        editable;
+    let ownedByCurrentUser = (notif.userToken == getCookie('hash'));
+
+    let editable = ownedByCurrentUser ? '<a id="editNotif" class="btn-floating"><i class="material-icons">edit</i></a>' : '';
+    let voteBtns = !ownedByCurrentUser ? '<a id="thumbUp" class="btn-floating green"><i class="material-icons">thumb_up</i></a>' +
+        '<a id="thumbDown" class="btn-floating red"><i class="material-icons">thumb_down</i></a>' : '';
 
     let infowindowData = "<div class='infowindow'>" +
         "<p>Event type: " + notif.type + "</p>" +
         "<p>" + notif.desc + "</p>" +
         "<p>Date: " + notif.date + "  &  Time: " + notif.time + "</p>" +
-        "<p id='iw-menu'>" + menu + "</p>" +
+        "<p id='iw-menu'>" + voteBtns + editable + "</p>" +
         "</div>";
 
     let infowindowShortData = "<div class='infowindowShort'>" +
