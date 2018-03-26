@@ -10,6 +10,7 @@ function loginPasswordMatch(login, pwd) {
     return $.post(baseUrl + "checklogin", "=" + JSON.stringify({ 'login': login, 'password': pwd }));
 }
 
+
 function registerUser(fName, lName, login, email, pwd, city, address, avatarSrc) {
     return $.post(baseUrl + "registeruser", "=" + JSON.stringify({
         'firstName': fName,
@@ -22,6 +23,20 @@ function registerUser(fName, lName, login, email, pwd, city, address, avatarSrc)
         'avatarSrc': avatarSrc
     }));
 }
+
+function UpdateUser(fName, lName, login, email, pwd, city, address, avatarSrc) {
+    return $.post(baseUrl + "updateuser", "=" + JSON.stringify({
+        'firstName': fName,
+        'lastName': lName,
+        'login': login,
+        'email': email,
+        'password': pwd,
+        'address': address,
+        'city': city,
+        'avatarSrc': avatarSrc
+    }));
+}
+
 
 function saveNotification(notification) {
     let hashEsc = encodeURIComponent(hash);
@@ -45,5 +60,9 @@ function notificationVote(notifid, voteValue) {
 }
 
 function getAllNotifications() {
-    return $.get(baseUrl + "getNotifications");
+    return $.get(baseUrl + "getNotifications"); 
+}
+
+function getUserInfos(login, hash) {
+    return $.post(baseUrl + "userinfos", "=" + JSON.stringify({ 'login': login, 'password': hash }));
 }

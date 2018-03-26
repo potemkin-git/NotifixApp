@@ -25,5 +25,11 @@ namespace NotifixApp.Controllers
             return View();
         }
 
+        [Route("/Settings")]
+        public IActionResult Settings()
+        {
+            return View();
+        }
+
     }
 }
