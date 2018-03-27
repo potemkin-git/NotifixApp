@@ -21,6 +21,7 @@ $(document).ready(function () {
         autoclose: true, // automatic close timepicker
         //ampmclickable: true, // make AM PM clickable
     });
+
 });
 
 function getFormInfo() {
@@ -56,17 +57,25 @@ function clearForm() {
     $('.typeSelection').removeClass('active');
 }
 
-function addMarker(notif, fromDb) {
+var transport = signalR.TransportType.WebSockets;
+var connection = new signalR.HubConnection("/notifixhub", { transport: transport });
 
+connection.on('notifSignalAdd', (notif) => {
+    createMarker(notif, false);
+});
+
+connection.start();
+
+function addMarker(notif, fromDb) {
     if (fromDb) {
         createMarker(notif, fromDb);
     } else
     {
-        saveNotification(notif).done(function (result) {
+       saveNotification(notif).done(function (result) {
             if (result == 0) {
                 Materialize.toast("Saving an event is forbidden as anonymous!", 2000, "rounded");
             } else {
-                createMarker(notif, fromDb);
+                connection.invoke('send', notif); // SignalR call
                 Materialize.toast("Successfuly saved!", 2000, "rounded", function () {
                     window.location.reload();
                 });

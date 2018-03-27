@@ -1,14 +1,12 @@
-﻿using System;
-using System.Web;
-using Microsoft.AspNet.SignalR;
-namespace SignalRNotifier
+﻿using Microsoft.AspNetCore.SignalR;
+
+namespace NotifixApp
 {
     public class NotifHub : Hub
     {
-        public void Send(string name, string message)
+        public void Send(object notif)
         {
-            // Call the addNewMessageToPage method to update clients.
-            Clients.All.addNewMessageToPage(name, message);
+            Clients.All.InvokeAsync("notifSignalAdd", notif);
         }
     }
 }

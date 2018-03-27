@@ -1,5 +1,14 @@
 var map, infoOpened, infoClosed = true;
 var jamLayer, accidentLayer, policeLayer, masterLayer = [];
+
+//var connection = new signalR.HubConnection('/SignalR');
+//connection.on('createMarkerSignal', data => {
+//    console.log("Data connection:");
+//    console.log(data);
+//    createMarker(data, false);
+//});
+//connection.start();
+
 var login = getCookie('login');
 var hash = getCookie('hash');
 var asAnonymous = false;
@@ -8,6 +17,7 @@ if (login == '' || typeof login == 'undefined') {
     asAnonymous = true;
 }
 $("#logOutBtn").append(login);
+
 
 
 Materialize.toast("Connected as: " + (login.length > 0 ? login : "Anonymous"), 2000, "rounded");

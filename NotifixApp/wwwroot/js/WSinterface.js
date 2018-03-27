@@ -45,7 +45,7 @@ function saveNotification(notification) {
         'description': notification.desc,
         'expirationDate': new Date(notification.date + ' ' + notification.time),
         'latitude': notification.lat,
-        'longitude': notification.long,
+        'longitude': notification.lng,
         'nbConf': 0,
         'nbDeny': 0,
         'login': login,
