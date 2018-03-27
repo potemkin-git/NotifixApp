@@ -24,7 +24,7 @@ function registerUser(fName, lName, login, email, pwd, city, address, avatarSrc)
     }));
 }
 
-function UpdateUser(fName, lName, login, email, pwd, city, address, avatarSrc) {
+function updateUser(fName, lName, login, email, pwd, city, address, avatarSrc) {
     return $.post(baseUrl + "updateuser", "=" + JSON.stringify({
         'firstName': fName,
         'lastName': lName,
@@ -64,5 +64,6 @@ function getAllNotifications() {
 }
 
 function getUserInfos(login, hash) {
-    return $.post(baseUrl + "userinfos", "=" + JSON.stringify({ 'login': login, 'password': hash }));
+    let hashEsc = encodeURIComponent(hash);
+    return $.post(baseUrl + "userinfos", "=" + JSON.stringify({ 'login': login, 'hash': hashEsc }));
 }

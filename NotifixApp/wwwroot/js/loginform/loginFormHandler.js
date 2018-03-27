@@ -1,11 +1,3 @@
-function blink_text() {
-    $(".errMsg").fadeOut(300, function () {
-        $('.errMsg').fadeIn(300);
-    });
-}
-setInterval(blink_text, 3000);
-
-
 function loginSubmit() {
     const login = $("#login #loginInput").val();
     const pwd = $("#login #pwdInput").val();

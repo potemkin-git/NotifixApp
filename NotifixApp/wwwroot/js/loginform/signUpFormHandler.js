@@ -1,11 +1,3 @@
-function blink_text() {
-    $(".errMsg").fadeOut(300, function () {
-        $('.errMsg').fadeIn(300);
-    });
-}
-
-setInterval(blink_text, 3000);
-
 $("#signup form").submit(function (event) {
     let fName = $("#signup form #fName").val();
     let lName = $("#signup form #lName").val();
