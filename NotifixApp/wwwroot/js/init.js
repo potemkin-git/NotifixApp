@@ -1,26 +1,18 @@
 var map, infoOpened, infoClosed = true;
 var jamLayer, accidentLayer, policeLayer, masterLayer = [];
-
-//var connection = new signalR.HubConnection('/SignalR');
-//connection.on('createMarkerSignal', data => {
-//    console.log("Data connection:");
-//    console.log(data);
-//    createMarker(data, false);
-//});
-//connection.start();
-
 var login = getCookie('login');
 var hash = getCookie('hash');
 var asAnonymous = false;
 if (login == '' || typeof login == 'undefined') {
-    login = 'Anonymous';
     asAnonymous = true;
+    $('#settingsBtn, #logOutBtn').parent().hide();
+} else {
+    $("#settingsBtn").append(login);
+    $('#loginBtn').parent().hide();
+
 }
-$("#logOutBtn").append(login);
 
-
-
-Materialize.toast("Connected as: " + (login.length > 0 ? login : "Anonymous"), 2000, "rounded");
+Materialize.toast("Connected as: " + (asAnonymous ? "Anonymous" : login), 2000, "rounded");
 
 function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {

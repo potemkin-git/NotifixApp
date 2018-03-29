@@ -19,8 +19,19 @@ $(document).ready(function () {
         cleartext: 'Clear', // text for clear-button
         canceltext: 'Cancel', // Text for cancel-button
         autoclose: true, // automatic close timepicker
-        //ampmclickable: true, // make AM PM clickable
+        ampmclickable: true, // make AM PM clickable
     });
+
+    var transport = signalR.TransportType.WebSockets;
+    //var connection = new signalR.HubConnection("/notifixhub", { transport: transport });
+    var connection = new signalR.HubConnection("/notifixhub");
+
+
+    connection.on('notifSignalAdd', (notif) => {
+        createMarker(notif, false);
+    });
+
+    connection.start();
 
 });
 
@@ -56,15 +67,6 @@ function clearForm() {
     $('#descEvent').empty();
     $('.typeSelection').removeClass('active');
 }
-
-var transport = signalR.TransportType.WebSockets;
-var connection = new signalR.HubConnection("/notifixhub", { transport: transport });
-
-connection.on('notifSignalAdd', (notif) => {
-    createMarker(notif, false);
-});
-
-connection.start();
 
 function addMarker(notif, fromDb) {
     if (fromDb) {
