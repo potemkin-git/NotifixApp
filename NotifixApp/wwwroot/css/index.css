@@ -275,3 +275,35 @@ html, body {
 .infowindow p {
     overflow-wrap: break-word;
 }
+
+/*******************************  COOKIE DISCLAIMER  *******************************/
+
+#cookieDisclaimer {
+    display: none;
+    position: absolute;
+    bottom: 10px;
+    height: 80px;
+    width: 90%;
+    margin-left: 5%;
+    background: #FFF;
+    border-radius: 15px;
+    z-index: 100;
+}
+
+#cookieDisclaimer .left, #cookieDisclaimer .right {
+    height: 100%;
+    text-align: center;
+}
+
+#cookieDisclaimer .right {
+    display: flex;
+    align-items: center;
+}
+
+#cookieDisclaimer .left {
+    width: 80%; 
+}
+
+#cookieDisclaimer .right {
+    width: 20%;
+}

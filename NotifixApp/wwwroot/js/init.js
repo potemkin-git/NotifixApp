@@ -6,6 +6,7 @@ var asAnonymous = false;
 if (login == '' || typeof login == 'undefined') {
     asAnonymous = true;
     $('#settingsBtn, #logOutBtn').parent().hide();
+    $("#cookieDisclaimer").show();
 } else {
     $("#settingsBtn").append(login);
     $('#loginBtn').parent().hide();
