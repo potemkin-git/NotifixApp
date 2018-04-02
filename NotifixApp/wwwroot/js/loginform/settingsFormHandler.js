@@ -63,6 +63,8 @@ $("#settings form").submit(function (event) {
                 allowed = true;
                 $("#settingsErrorMsg").text("").hide();
                 window.location.href = '/';
+                    Materialize.toast("Settings updated", 8000);  //TODO  PRIOTITE  POPUP CONNECTED AS ..
+
             } else if (resultCreate == "404") {
                 $("#settingsErrorMsg").text("Update failed").show();
             }

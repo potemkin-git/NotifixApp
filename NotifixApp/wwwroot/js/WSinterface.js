@@ -10,6 +10,10 @@ function loginPasswordMatch(login, pwd) {
     return $.post(baseUrl + "checklogin", "=" + JSON.stringify({ 'login': login, 'password': pwd }));
 }
 
+function resetPassword(mail) {
+    return $.post(baseUrl + "resetpassword", "=" + JSON.stringify({ 'email': mail }));
+}
+
 
 function registerUser(fName, lName, login, email, pwd, city, address, avatarSrc) {
     return $.post(baseUrl + "registeruser", "=" + JSON.stringify({

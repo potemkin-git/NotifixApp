@@ -31,5 +31,11 @@ namespace NotifixApp.Controllers
             return View();
         }
 
+        [Route("/Password")]
+        public IActionResult Password()
+        {
+            return View();
+        }
+
     }
 }

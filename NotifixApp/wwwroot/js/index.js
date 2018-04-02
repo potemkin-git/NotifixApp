@@ -22,6 +22,9 @@ $(document).ready(function () {
         ampmclickable: true, // make AM PM clickable
     });
 
+
+
+
     var transport = signalR.TransportType.WebSockets;
     //var connection = new signalR.HubConnection("/notifixhub", { transport: transport });
     var connection = new signalR.HubConnection("/notifixhub");
@@ -47,7 +50,7 @@ function getFormInfo() {
     let currLat = $('#coordsData').attr('data-lat');
     let currLong = $('#coordsData').attr('data-long');
 
-    if (infos.lat != "" && infos.lng != ""){
+    if (infos.lat != "" && infos.lng != "") {
         if (!isNaN(parseFloat(infos.lat))
             && !isNaN(parseFloat(infos.lng))
             && parseFloat(infos.lat) >= -90
@@ -57,6 +60,10 @@ function getFormInfo() {
             currLat = parseFloat(infos.lat);
             currLong = parseFloat(infos.lng);
         }
+    }  
+
+    if (infos.type == "" || infos.date == "" || infos.time == "" || currLat == "" || currLong ==  "") {
+        return null;
     }
 
     return new Notification(null, getCookie('hash'), infos.type, infos.desc, infos.date, infos.time, currLat, currLong, 0, 0);
@@ -77,6 +84,8 @@ function addMarker(notif, fromDb) {
             if (result == 0) {
                 Materialize.toast("Saving an event is forbidden as anonymous!", 2000, "rounded");
             } else {
+                var connection = new signalR.HubConnection("/notifixhub");
+
                 connection.invoke('send', notif); // SignalR call
                 Materialize.toast("Successfuly saved!", 2000, "rounded", function () {
                     window.location.reload();

@@ -60,7 +60,14 @@ function loadListeners() {
     $('#saveModal').click(function () {
         if (!asAnonymous) {
             let notification = getFormInfo();
-            addMarker(notification, false);
+            if (notification !== null ) {
+                addMarker(notification, false);
+            } else {
+                var $toastContent1 = $('<span>Error : all fields required </span>');
+                Materialize.toast($toastContent1, 10000);
+                return;
+
+            }
         } else {
             var $toastContent = $('<span>You need to be logged in to perform this action!</span>').add($('<a class="btn-flat toast-action" href="/login">Create my account</a>'));
             Materialize.toast($toastContent, 10000);
