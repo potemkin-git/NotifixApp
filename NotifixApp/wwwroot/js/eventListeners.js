@@ -13,8 +13,11 @@ function loadListeners() {
     // Button that opens the notification creation modal window(additionnal fields + custom size)
     $('#addEvent').click(function () {
         clearForm();
+        $('.typeSelection').parent().css({ "color": "initial", "font-weight": "initial" });
         $('.createMode').show();
         $('.editMode').hide();
+        $('#optionalAddressInput').show();
+        $('#optionnalLatLngInput').hide();
         $('#optionalSearchInput').show();
         if ($('#toggleFilter').hasClass('active')) {
             $('#toggleFilterBtn').trigger('click');
@@ -41,6 +44,7 @@ function loadListeners() {
     // Opens from map click the notification creation modal window (location is automatically set + reduced size)
     map.addListener('dblclick', function (event) {
         clearForm();
+        $('.typeSelection').parent().css({ "color": "initial", "font-weight": "initial" });
         $('.createMode').show();
         $('.editMode').hide();
         $('#optionalSearchInput').hide();
@@ -60,14 +64,10 @@ function loadListeners() {
     $('#saveModal').click(function () {
         if (!asAnonymous) {
             let notification = getFormInfo();
-            if (notification !== null ) {
-                addMarker(notification, false);
-            } else {
-                var $toastContent1 = $('<span>Error : all fields required </span>');
-                Materialize.toast($toastContent1, 10000);
+            if (notification == null ) {
                 return;
-
             }
+            addMarker(notification, false);
         } else {
             var $toastContent = $('<span>You need to be logged in to perform this action!</span>').add($('<a class="btn-flat toast-action" href="/login">Create my account</a>'));
             Materialize.toast($toastContent, 10000);
@@ -86,7 +86,6 @@ function loadListeners() {
                 $(this).hide();
                 next();
             });
-            // $filterCheckbox.hide();
             $(this).css({transform: "rotate(0deg)", right: "-15px"});
         } else {
             $toggleFilter.animate({width: "30vh"}, 600);

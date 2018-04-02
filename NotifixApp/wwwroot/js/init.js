@@ -12,8 +12,15 @@ if (login == '' || typeof login == 'undefined') {
     $('#loginBtn').parent().hide();
 
 }
-
 Materialize.toast("Connected as: " + (asAnonymous ? "Anonymous" : login), 2000, "rounded");
+
+
+// SignalR init
+var connection = new signalR.HubConnection("/notifixhub");
+connection.on('notifSignalAdd', (notif) => {
+    createMarker(notif, false);
+});
+connection.start();
 
 function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
@@ -205,7 +212,7 @@ initMap();
 getAllNotifications().done(function (data) {
     for (let key in data) {
         let item = data[key];
-        let notif = new Notification(item.id, item.userToken, item.type, item.desc, item.date, item.time, item.lat, item.lng, item.nbConf, item.nbDeny);
+        let notif = new Notification(item.id, item.userToken, item.type, item.desc, item.expDate, item.lat, item.lng, item.nbConf, item.nbDeny);
         addMarker(notif, true);
     }
 });

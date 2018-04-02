@@ -22,18 +22,6 @@ $(document).ready(function () {
         ampmclickable: true, // make AM PM clickable
     });
 
-
-
-
-    var transport = signalR.TransportType.WebSockets;
-    var connection = new signalR.HubConnection("/notifixhub");
-
-    connection.on('notifSignalAdd', (notif) => {
-        createMarker(notif, false);
-    });
-
-    connection.start();
-
 });
 
 function getFormInfo() {
@@ -49,22 +37,35 @@ function getFormInfo() {
     let currLong = $('#coordsData').attr('data-long');
 
     if (infos.lat != "" && infos.lng != "") {
-        if (!isNaN(parseFloat(infos.lat))
-            && !isNaN(parseFloat(infos.lng))
-            && parseFloat(infos.lat) >= -90
-            && parseFloat(infos.lat) <= 90
-            && parseFloat(infos.lng) >= -180
-            && parseFloat(infos.lng) <= 180) {
+        if (!isNaN(parseFloat(infos.lat)) && !isNaN(parseFloat(infos.lng))
+            && parseFloat(infos.lat) >= -90 && parseFloat(infos.lat) <= 90
+            && parseFloat(infos.lng) >= -180 && parseFloat(infos.lng) <= 180) {
             currLat = parseFloat(infos.lat);
             currLong = parseFloat(infos.lng);
+        } else {
+            currLat = "";
+            currLong = "";
         }
     }  
 
-    if (infos.type == "" || infos.date == "" || infos.time == "" || currLat == "" || currLong ==  "") {
-        return null;
+    let isValidForm = true;
+    // Mandatory values
+    if (infos.type == "") {
+        Materialize.toast("Please select an event type", 3000, "rounded");
+        isValidForm = false;
     }
-
-    return new Notification(null, getCookie('hash'), infos.type, infos.desc, infos.date, infos.time, currLat, currLong, 0, 0);
+    if (currLat == "" || currLong == "") {
+        Materialize.toast("Invalid coordinates (latitude/longitude)", 3000, "rounded");
+        isValidForm = false;
+    }
+    // Optional values: date & time => if both empty, will be set to current Date + 10 days
+    let expDate;
+    if (infos.date == "") {
+        expDate = new Date().addDays(10);
+    } else {
+        expDate = new Date(infos.date + " " + infos.time == "" ? "00:00" : infos.time);
+    }
+    return isValidForm ? new Notification(null, getCookie('hash'), infos.type, infos.desc, expDate, currLat, currLong, 0, 0) : null;
 }
 
 function clearForm() {
@@ -82,8 +83,6 @@ function addMarker(notif, fromDb) {
             if (result == 0) {
                 Materialize.toast("Saving an event is forbidden as anonymous!", 2000, "rounded");
             } else {
-                var connection = new signalR.HubConnection("/notifixhub");
-
                 connection.invoke('send', notif); // SignalR call
                 Materialize.toast("Successfuly saved!", 2000, "rounded", function () {
                     window.location.reload();
@@ -97,7 +96,6 @@ function addMarker(notif, fromDb) {
 }
 
 function createMarker(notif, fromDb) {
-
     let ownedByCurrentUser = (notif.userToken == getCookie('hash'));
 
     let editable = ownedByCurrentUser ? '<a id="editNotif" class="btn-floating"><i class="material-icons">edit</i></a>' : '';
@@ -146,10 +144,10 @@ function createMarker(notif, fromDb) {
             policeLayer.add(marker);
             break;
     }
+}
 
-    if (!fromDb) {
-        map.panTo({ lat: parseFloat(notif.lat), lng: parseFloat(notif.lng) });
-        map.setZoom(17);
-    }
-
+Date.prototype.addDays = function (days) {
+    var dat = new Date(this.valueOf());
+    dat.setDate(dat.getDate() + days);
+    return dat;
 }

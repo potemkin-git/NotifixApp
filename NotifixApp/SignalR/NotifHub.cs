@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using System.Collections.Generic;
 
 namespace NotifixApp
 {
@@ -6,7 +7,9 @@ namespace NotifixApp
     {
         public void Send(object notif)
         {
-            Clients.All.InvokeAsync("notifSignalAdd", notif);
+            List<string> excluded = new List<string>();
+            excluded.Add(Context.ConnectionId);
+            Clients.AllExcept(excluded).InvokeAsync("notifSignalAdd", notif);
         }
     }
 }

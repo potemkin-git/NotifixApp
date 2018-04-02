@@ -41,13 +41,12 @@ function updateUser(fName, lName, login, email, pwd, city, address, avatarSrc) {
     }));
 }
 
-
 function saveNotification(notification) {
     let hashEsc = encodeURIComponent(hash);
     let notifAsJson = JSON.stringify({
         'type': notification.type,
         'description': notification.desc,
-        'expirationDate': new Date(notification.date + ' ' + notification.time),
+        'expirationDate': notification.expDate,
         'latitude': notification.lat,
         'longitude': notification.lng,
         'nbConf': 0,

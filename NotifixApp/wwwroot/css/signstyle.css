@@ -177,13 +177,14 @@ textarea {
     -webkit-appearance: none;
 }
 
-    .button:hover, .button:focus {
-        background: #179b77;
-    }
+.button:hover, .button:focus {
+    background: #179b77;
+}
 
 .button-block {
     display: block;
     width: 100%;
+    font-size: 1.5rem;
 }
 
 .forgot {
