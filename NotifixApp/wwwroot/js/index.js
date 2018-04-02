@@ -26,9 +26,7 @@ $(document).ready(function () {
 
 
     var transport = signalR.TransportType.WebSockets;
-    //var connection = new signalR.HubConnection("/notifixhub", { transport: transport });
     var connection = new signalR.HubConnection("/notifixhub");
-
 
     connection.on('notifSignalAdd', (notif) => {
         createMarker(notif, false);
