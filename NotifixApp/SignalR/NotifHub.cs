@@ -7,9 +7,7 @@ namespace NotifixApp
     {
         public void Send(object notif)
         {
-            List<string> excluded = new List<string>();
-            excluded.Add(Context.ConnectionId);
-            Clients.AllExcept(excluded).InvokeAsync("notifSignalAdd", notif);
+            Clients.All.InvokeAsync("notifSignalAdd", notif);
         }
     }
 }

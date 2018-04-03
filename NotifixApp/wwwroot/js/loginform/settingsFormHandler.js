@@ -12,7 +12,7 @@ $(document).ready(function () {
             verified = true;
             $("#fName").val(result.firstName);
             $("#lName").val(result.lastName);
-            $("#loginNew").val(result.login);
+            $("#loginNew").val(log);
             $("#email").val(result.mail);
             $("#city").val(result.city);
             $("#address").val(result.address);
@@ -22,7 +22,6 @@ $(document).ready(function () {
 });
 
 $("#settings form").submit(function (event) {
-
     event.preventDefault();
 
     if (!verified) {
@@ -30,23 +29,18 @@ $("#settings form").submit(function (event) {
         return;
     }
 
-    let fName = $("#settings form #fName").val();
-    let lName = $("#settings form #lName").val();
-    let login = $("#settings form #loginNew").val();
-    let email = $("#settings form #email").val();
-    let pwd = $("#settings form #password").val();
-    let city = $("#settings form #city").val();
-    let address = $("#settings form #address").val();
+    let fName = $("#fName").val();
+    let lName = $("#lName").val();
+    let email = $("#email").val();
+    let pwd = $("#password").val();
+    let city = $("#city").val();
+    let address = $("#address").val();
     let avatarSrc = $('#avaThumb').attr('src');
-
     let msgError = "";
     let validInputs = false;
-    let allowed = false;
 
-    if (fName == "" || lName == "" || login == "" || email == "" || city == "" || address == "" || avatarSrc.indexOf('miss.jpg') != -1)
+    if (fName == "" || lName == "" || email == "" || city == "" || address == "" || avatarSrc.indexOf('miss.jpg') != -1)
         msgError = "All fields are required";
-    else if (login.length < 5)
-        msgError = "Login must have 5 characters or more";
     else if (!validateEmail(email))
         msgError = "Invalid email address";
     else if (pwd != "" && pwd.length < 8)
@@ -56,20 +50,49 @@ $("#settings form").submit(function (event) {
     if (!validInputs || msgError != "") {
         $("#settingsErrorMsg").text(msgError).show();
     } else {
-        //isLoginorEmailUsed(login, email).then(function (resultCheck) {
-        updateUser(fName, lName, login, email, pwd, city, address, avatarSrc).then(function (resultCreate) {
-            console.log(resultCreate);
-            if (resultCreate == "200") {
-                allowed = true;
-                $("#settingsErrorMsg").text("").hide();
-                window.location.href = '/';
-                    Materialize.toast("Settings updated", 8000);  //TODO  PRIOTITE  POPUP CONNECTED AS ..
-
-            } else if (resultCreate == "404") {
-                $("#settingsErrorMsg").text("Update failed").show();
+        isLoginorEmailUsed(log, email).done(function (resultCheck) {
+            if (resultCheck == "403login") {
+                $("#settingsErrorMsg").text("Login already used, please choose another").show();
+            } else if (resultCheck == "403pwd") {
+                $("#settingsErrorMsg").text("Email already used, please choose another").show();
             }
-        }).catch(function (err) {
-            console.error('Error:' + err);
+            else if (resultCheck == "200") {
+                updateUser(fName, lName, log, email, pwd, city, address, avatarSrc).then(function (resultCreate) {
+                    if (resultCreate == "200") {
+                        $("#settingsErrorMsg").text("").hide();
+                        Materialize.toast("Settings updated!", 1000, "rounded", function () {
+                            Materialize.toast("Redirecting to application...", 2000, "rounded", function () {
+                                window.location.href = '/map';
+                            });
+                        });
+                    } else if (resultCreate == "404") {
+                        $("#settingsErrorMsg").text("Update failed").show();
+                    }
+                }).catch(function (err) {
+                    console.error('Error:' + err);
+                });
+            }
         });
     }
 });
+
+function deleteAccount() {
+    swal({
+        title: "Are you sure?",
+        text: "Once deleted, you will not be able to recover your account!",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    })
+        .then((willDelete) => {
+            if (willDelete) {
+                deleteUserAccount(log).done(function (result) {
+                    if (result == "suppressed") {
+                        Materialize.toast("Account being deleted...", 2000, "rounded", function () {
+                            unsetCookie('/');
+                        });
+                    }
+                });
+            }
+        });
+}

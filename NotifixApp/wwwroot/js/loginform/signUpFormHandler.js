@@ -1,4 +1,6 @@
 $("#signup form").submit(function (event) {
+    event.preventDefault();
+
     let fName = $("#signup form #fName").val();
     let lName = $("#signup form #lName").val();
     let login = $("#signup form #loginNew").val();
@@ -10,7 +12,6 @@ $("#signup form").submit(function (event) {
 
     let msgError = "";
     let validInputs = false;
-    let allowed = false;
 
     if (fName == "" || lName == "" || login == "" || email == "" || pwd == "" || city == "" || address == "" || avatarSrc.indexOf('miss.jpg') != -1)
         msgError = "All fields are required";
@@ -26,37 +27,34 @@ $("#signup form").submit(function (event) {
         $("#signUpErrorMsg").text(msgError).show();
     } else {
         isLoginorEmailUsed(login, email).done(function (resultCheck) {
-            console.log(resultCheck);
             if (resultCheck == "403login") {
                 $("#signUpErrorMsg").text("Login already used, please choose another").show();
             } else if (resultCheck == "403pwd") {
                 $("#signUpErrorMsg").text("Email already used, please choose another").show();
             }
-            else if (resultCheck == "200"){
+            else if (resultCheck == "200") {
                 registerUser(fName, lName, login, email, pwd, city, address, avatarSrc).done(function (resultCreate) {
-                    console.log(resultCreate);
                     let code = resultCreate.substr(0, 3);
                     let hash = resultCreate.substr(3);
                     if (code == "200") {
-                        allowed = true;
                         $("#signUpErrorMsg").text("").hide();
                         let date = new Date();
-                        date.setMonth(date.getMonth() + 1);
+                        date.addDays(30);
                         document.cookie = "login=" + login + "; expires=" + date + "; path=/";
                         document.cookie = "hash=" + hash + "; expires=" + date + "; path=/";
-                        window.location.href = '/';
+                        Materialize.toast("Redirecting to application...", 2000, "rounded", function () {
+                            window.location.href = '/map';
+                        });
                     } else if (code == "404") {
                         $("#signUpErrorMsg").text("Account creation failed").show();
                     }
-                }).catch(function (err) {
+                }).fail(function (err) {
                     console.error('Error:' + err);
                 });
             }
-        }).catch(function (err) {
+        }).fail(function (err) {
             console.error('Error:' + err);
         });
     }
-
-    if (!allowed) event.preventDefault();
 });
 

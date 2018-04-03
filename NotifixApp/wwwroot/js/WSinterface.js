@@ -70,3 +70,15 @@ function getUserInfos(login, hash) {
     let hashEsc = encodeURIComponent(hash);
     return $.post(baseUrl + "userinfos", "=" + JSON.stringify({ 'login': login, 'hash': hashEsc }));
 }
+
+function getAvatar(login) {
+    return $.post(baseUrl + "avatar", "=" + JSON.stringify({ 'login': login }));
+}
+
+function deleteNotification(notifId) {
+    return $.post(baseUrl + "deletenotification", "=" + JSON.stringify({ 'id': notifId }));
+}
+
+function deleteUserAccount(login) {
+    return $.post(baseUrl + "deleteuseraccount", "=" + JSON.stringify({ 'login': login }));
+}

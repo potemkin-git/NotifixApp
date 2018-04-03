@@ -13,6 +13,13 @@ body {
     font-family: 'Titillium Web', sans-serif;
 }
 
+#titleImg {
+    display: block;
+    margin-top: 40px;
+    margin-left:auto;
+    margin-right: auto;
+}
+
 a {
     text-decoration: none;
     color: #1ab188;
@@ -28,7 +35,7 @@ a:hover {
     background: rgba(19, 35, 47, 0.9);
     padding: 40px;
     max-width: 600px;
-    margin: 5% auto;
+    margin: 3% auto;
     border-radius: 4px;
     box-shadow: 0 4px 10px 4px rgba(19, 35, 47, 0.3);
 }
@@ -36,7 +43,8 @@ a:hover {
 .tab-group {
     list-style: none;
     padding: 0;
-    margin: 0 0 40px 0;
+    margin: 0 0 20px 0;
+    height: 40px;
 }
 
 .tab-group:after {
@@ -72,14 +80,6 @@ a:hover {
 
 .tab-content > div:last-child {
     display: none;
-}
-
-h1 {
-    text-align: center;
-    color: #ffffff;
-    font-weight: 300;
-    font-size: 2.5rem;
-    margin: 0 0 25px;
 }
 
 label {
@@ -184,7 +184,7 @@ textarea {
 .button-block {
     display: block;
     width: 100%;
-    font-size: 1.5rem;
+    font-size: 1.1rem;
 }
 
 .forgot {

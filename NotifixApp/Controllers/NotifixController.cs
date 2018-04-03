@@ -19,8 +19,8 @@ namespace NotifixApp.Controllers
             return View();
         }
 
-        [Route("/login")]
-        public IActionResult Login()
+        [Route("/map")]
+        public IActionResult Map()
         {
             return View();
         }

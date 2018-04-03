@@ -1,150 +1,130 @@
 ﻿@{
-    ViewData["Title"] = "Notifix Home Page";
+    ViewData["Title"] = "Notifix Registration";
 }
 
 @section Css {
-    <link rel="stylesheet" href="~/css/index.css">
+    <link rel="stylesheet" href="~/css/signstyle.css">
 }
 
+<img id="titleImg" src="~/images/title.png" alt="title">
 
-<a id="addEvent" class="btn-floating waves-effect waves-light red tooltipped pulse" data-position="top" data-delay="50" data-tooltip="Declare an incident"><i class="material-icons">add</i></a>
+<div class="form">
 
-<div class="fixed-action-btn horizontal click-to-toggle mainmenuDiv">
-    <a id="mainmenuBtn" class="btn-floating btn-large cyan darken-2 spinner-blue"><i class="material-icons">menu</i></a>
-    <ul>
-        <li><a id="loginBtn" class="waves-effect waves-light btn blue darken-1 spinner-blue white-text" href="/login"><i class="large material-icons left">account_box</i>Sign in/up</a></li>
-        <li><a id="settingsBtn" class="waves-effect waves-light btn light-green accent-4 spinner-blue white-text" href="/Settings"><i class="large material-icons left">settings</i></a></li>
-        <li><a class="waves-effect waves-light btn amber lighten-1 spinner-blue white-text modal-trigger" href="#modalHelp"><i class="large material-icons left">help</i>Help</a></li>
-        <li><a id="logOutBtn" class="waves-effect waves-light btn deep-orange lighten-1 spinner-blue white-text" onclick="unsetCookie()" href="#"><i class="large material-icons left">exit_to_app</i>Log out</a></li>
+    <ul class="tab-group">
+        <li class="tab"><a href="#signup">Sign Up</a></li>
+        <li class="tab active"><a href="#login">Log In</a></li>
     </ul>
-</div>
 
+    <div class="tab-content">
 
+        <div id="login">
+            <p id="loginErrorMsg" class="errMsg"> </p>
+            <div class="field-wrap">
+                <label>
+                    Login<span class="req">*</span>
+                </label>
+                <input id="loginInput" type="text" autocomplete="off" />
+            </div>
 
-<nav id="toggleFilter">
-    <img id="toggleFilterBtn" src="~/images/toggleBtn.png" alt="">
-    <div id="filterCheckbox" class="switch">
-        <p>Display traffic jams</p>
-        <label>Off<input type="checkbox" id="jamFilter" checked="checked" /><span class="lever"></span>On</label>
+            <div class="field-wrap">
+                <label>
+                    Password<span class="req">*</span>
+                </label>
+                <input id="pwdInput" type="password" autocomplete="off" />
+            </div>
 
-        <p>Display car accidents</p>
-        <label>Off<input type="checkbox" id="accidentFilter" checked="checked" /><span class="lever"></span>On</label>
+            <p class="forgot"><a href='/password'>Forgot Password?</a></p>
 
-        <p>Display police checkpoints</p>
-        <label>Off<input type="checkbox" id="policeFilter" checked="checked" /><span class="lever"></span>On</label>
-    </div>
-</nav>
-
-<div id="map"></div>
-<input type="text" id="searchInput" class="controls" placeholder="Search for a place">
-
-
-<div id="addNotif" class="modal modal-fixed-footer">
-    <div class="modal-content">
-        <h4 class="createMode">What did you notice?</h4>
-        <h4 class="editMode">Edit my notification</h4>
-        <div class="row">
-            <form id="formNotif" class="col s12" action="#">
-
-                <div class="row">
-                    <div class="col s10 offset-s1">
-                        <div id="imgTypes">
-                            <label>Accident<img id="accident" class="typeSelection" type="image" src="~/images/accident.png"></label>
-                            <label>Traffic<img id="jam" class="typeSelection" type="image" src="~/images/jam.png"></label>
-                            <label>Police<img id="police" class="typeSelection" type="image" src="~/images/police.png"></label>
-                        </div>
-                        <input id="resultType" type="text" style="display: none;">
-                    </div>
-                </div>
-
-                <div id="optionalSearchInput" class="row">
-                    <div id="coordChoice" class="col s10 offset-s1">
-                        <p>Locate my event using:</p>
-                        <p><input name="coordType" type="radio" id="address" class="with-gap" checked /><label for="address">Address</label></p>
-                        <p><input name="coordType" type="radio" id="gps" class="with-gap" /><label for="gps">GPS</label></p>
-                    </div>
-
-                    <div id="optionalAddressInput" class="input-field col s8 offset-s2">
-                        <input type="text" id="searchInputModal" class="controls" placeholder="Search for a place">
-                        <input id="coordsData" data-lat="" data-long="" type="text" style="display: none;">
-                    </div>
-                    <div id="optionnalLatLngInput" class="input-field col s12">
-                        <input type="text" id="latForm" class="coordForm col s3 offset-s2" placeholder="Latitude">
-                        <input type="text" id="lngForm" class="coordForm col s3 offset-s2" placeholder="Longitude">
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col s12">
-                        <input id="dateInput" type="text" class="datepicker col s3 offset-s2" placeholder="When will it end?">
-                        <input id="timeInput" type="text" class="timepicker col s3 offset-s2" placeholder="At what time?">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="input-field col s10 offset-s1">
-                        <textarea placeholder="Description" id="descEvent" class="materialize-textarea" type="text" wrap="hard" data-length="100"></textarea>
-                    </div>
-                </div>
-            </form>
+            <button type="button" class="button button-block" onclick="loginSubmit()" >Log In</button>
+            <p style="width: 100%; text-align:center; color: #FFF">OR</p>
+            <button style="background-color: royalblue" type="button" class="button button-block" onclick="unsetCookie('/map');">Connect as anonymous</button>
         </div>
-    </div>
-    <div class="modal-footer">
-        <a href="#!" id="saveModal" class="modal-action modal-close waves-effect waves-green btn"><i class="medium material-icons left">check_circle</i>Save</a>
-        <a href="#!" id="cancelModal" class="modal-action modal-close waves-effect waves-red btn"><i class="medium material-icons left">cancel</i>Cancel</a>
-    </div>
-</div>
+
+        <div id="signup">
+            <p id="signUpErrorMsg" class="errMsg"> </p>
+
+            <form action="#" method="post">
+
+                <div class="top-row">
+                    <div class="field-wrap">
+                        <label>
+                            First Name<span class="req">*</span>
+                        </label>
+                        <input id="fName" type="text" />
+                    </div>
+
+                    <div class="field-wrap">
+                        <label>
+                            Last Name<span class="req">*</span>
+                        </label>
+                        <input id="lName" type="text" />
+                    </div>
+                </div>
+
+                <div class="field-wrap">
+                    <label>
+                        Login<span class="req">*</span>
+                    </label>
+                    <input id="loginNew" type="text" />
+                </div>
+
+                <div class="field-wrap">
+                    <label>
+                        Email Address<span class="req">*</span>
+                    </label>
+                    <input id="email" type="email" />
+                </div>
+
+                <div class="field-wrap">
+                    <label>
+                        City<span class="req">*</span>
+                    </label>
+                    <input id="city" type="text" />
+                </div>
+
+                <div class="field-wrap">
+                    <label>
+                        Address<span class="req">*</span>
+                    </label>
+                    <input id="address" type="text" />
+                </div>
+
+                <div class="field-wrap">
+                    <label>
+                        Set A Password<span class="req">*</span>
+                    </label>
+                    <input id="password" type="password" autocomplete="off" />
+                </div>
+
+                <div class="field-wrap avatar">
+                    <label>
+                        Choose an avatar<span class="req">*</span>
+                    </label>
+                    <input id="btnAvatar" type="button" value="Pick my avatar" onclick="openGrid()">
+                    <img id="avaThumb" src="~/images/avatars/miss.jpg">
+                </div>
+
+                <button type="submit" class="button button-block">Get Started</button>
+                <p style="width: 100%; text-align:center; color: #FFF">OR</p>
+                <button style="background-color: royalblue" type="button" class="button button-block" onclick="unsetCookie('/map');">Connect as anonymous</button>
+            </form>
+
+        </div>
 
 
-<div id="modalHelp" class="modal">
-    <div class="modal-content center-align">
-        <h4>How to use Notifix</h4>
-        <p>Notifix provides a full Google Map filled by many kind of events.</p>
-        <p>Those events are managed by the Notifix community, including you as soon as you will have created your account.</p>
-        <p>
-            In order to add an event, you just need to double click on the map to quickly point a specific location,<br>
-            or add it using the red + button placed at the bottom of the map.
-        </p>
-        <p>Required fields on the displayed form include:</p>
-        <ul>
-            <li>Type of event</li>
-            <li>Date and time of expiration (if known)</li>
-            <li>Description</li>
-        </ul>
-        <p>Note: as an anonymous user, you still have access to the events view but cannot add any, or vote.</p>
-        <p>Event votes is a features allowing the community to the authenticity of declared events (thumb up), or vote down in case of wrong or outdated event.</p>
-        <h4>Menu</h4>
-        <p>The top right menu button allows 1 or 3 actions (depending if you are logged in or as anonymous):</p>
-        <ul>
-            <li>Login/signup: create your new account, or log in to an existing one.</li>
-            <li>Edit profile (only if already logged in): access to your personal data, edit and save changes.</li>
-            <li>Logout (only if already logged in): disconnect from the current session.</li>
-        </ul>
-        <p>In case of question or suggestion, please contact us at: <a href="mailto:contact@notifix.com">contact@notifix.com</a></p>
-        <strong>Enjoy the application!</strong>
-    </div>
-    <div class="modal-footer">
-        <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat green white-text">Thanks!</a>
-    </div>
-</div>
+    </div><!-- tab-content -->
 
-<div id="cookieDisclaimer">
-    <div class="left">
-        <p>By using this application, you allow Notifix to use and store cookies, to improve user experience.</p>
-        <p>Those can be disabled through your browser settings.</p>
-    </div>
-    <div class="right">
-        <a class="btn" onclick="$('#cookieDisclaimer').hide();">I agree</a>
-    </div>
-</div>
+</div> <!-- /form -->
+
+<div id="avatarChoice"></div>
+
 
 @section Scripts {
-    <script type="text/javascript" src="~/lib/signalr-client-1.0.0-alpha2-final.min.js"></script>
-    <script type="text/javascript" src="~/js/WSinterface.js"></script>
-    <script type="text/javascript" src="~/js/index.js"></script>
-    <script type="text/javascript" src="~/js/tools.js"></script>
-    <script type="text/javascript" src="~/js/eventListeners.js"></script>
-    <script type="text/javascript" src="~/js/init.js"></script>
-    <script type="text/javascript" src="~/js/Notification.js"></script>
+    <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+    <script src="~/js/tools.js"></script>
+    <script src="~/js/WSinterface.js"></script>
+    <script src="~/js/loginform/signFormScript.js"></script>
+    <script src="~/js/loginform/loginFormHandler.js"></script>
+    <script src="~/js/loginform/signUpFormHandler.js"></script>
 }
-
 

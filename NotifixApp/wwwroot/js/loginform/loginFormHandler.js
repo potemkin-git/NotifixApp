@@ -13,7 +13,7 @@ function loginSubmit() {
                 date.setMonth(date.getMonth() + 1);
                 document.cookie = "login=" + login + "; expires=" + date + "; path=/";
                 document.cookie = "hash=" + hash + "; expires=" + date + "; path=/";
-                window.location.href = '/';
+                window.location.href = '/map';
             }
         }).fail(function () {
             $("#loginErrorMsg").text("Connexion to server failed").show();

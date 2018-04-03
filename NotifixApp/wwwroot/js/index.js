@@ -84,9 +84,7 @@ function addMarker(notif, fromDb) {
                 Materialize.toast("Saving an event is forbidden as anonymous!", 2000, "rounded");
             } else {
                 connection.invoke('send', notif); // SignalR call
-                Materialize.toast("Successfuly saved!", 2000, "rounded", function () {
-                    window.location.reload();
-                });
+                Materialize.toast("Successfuly saved!", 2000, "rounded");
             }
         }).fail(function (result) {
             console.log(result.responseText)
@@ -98,14 +96,14 @@ function addMarker(notif, fromDb) {
 function createMarker(notif, fromDb) {
     let ownedByCurrentUser = (notif.userToken == getCookie('hash'));
 
-    let editable = ownedByCurrentUser ? '<a id="editNotif" class="btn-floating"><i class="material-icons">edit</i></a>' : '';
-    let voteBtns = !ownedByCurrentUser ? '<a id="thumbUp" class="btn-floating green"><i class="material-icons">thumb_up</i></a>' +
-        '<a id="thumbDown" class="btn-floating red"><i class="material-icons">thumb_down</i></a>' : '';
+    let editable = ownedByCurrentUser ? '<a id="editNotif" onclick="deleteNotif('+notif.id+')" class="btn-floating red"><i class="material-icons">delete</i></a>' : '';
+    let voteBtns = !ownedByCurrentUser ? '<div class="voteButtons"><a id="thumbUp" class="btn-floating green"><i class="material-icons">thumb_up</i></a>' +
+        '<a id="thumbDown" class="btn-floating red"><i class="material-icons">thumb_down</i></a></div>' : '';
 
     let infowindowData = "<div class='infowindow'>" +
         "<p>Event type: " + notif.type + "</p>" +
         "<p>" + notif.desc + "</p>" +
-        "<p>Date: " + notif.date + "  &  Time: " + notif.time + "</p>" +
+        "<p>Expire on: "+ notif.expDate + "</p>" +
         "<p id='iw-menu'>" + voteBtns + editable + "</p>" +
         "</div>";
 
@@ -129,7 +127,7 @@ function createMarker(notif, fromDb) {
         properties: {
             infoWindow: infowindow,
             infoWindowShort: infowindowShort,
-            notif: notif
+            notif: notif,
         }
     });
 
@@ -146,8 +144,23 @@ function createMarker(notif, fromDb) {
     }
 }
 
-Date.prototype.addDays = function (days) {
-    var dat = new Date(this.valueOf());
-    dat.setDate(dat.getDate() + days);
-    return dat;
+function deleteNotif(notifId) {
+    swal({
+        title: "Are you sure?",
+        text: "Once deleted, you will not be able to recover this notification!",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    })
+        .then((willDelete) => {
+            if (willDelete) {
+                deleteNotification(notifId).done(function (result) {
+                    if (result == "suppressed") {
+                        Materialize.toast("Event being deleted...", 2000, "rounded", function () {
+                            window.location.reload();
+                        });
+                    }
+                });
+            } 
+        });
 }

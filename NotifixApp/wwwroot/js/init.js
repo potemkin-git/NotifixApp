@@ -48,12 +48,25 @@ function locateMe() {
 function showPosition(position) {
     let myLat = position.coords.latitude;
     let myLong = position.coords.longitude;
-    map.setCenter({lat: myLat, lng: myLong});
-    new google.maps.Marker({
-        map: map,
-        icon: '../images/here.png',
-        position: new google.maps.LatLng(myLat,myLong),
-        animation: google.maps.Animation.BOUNCE
+    var avatar;
+    getAvatar(login).done(function (result) {
+        if (result == "none") {
+            var icon = {
+                url: '../images/here.png', // url
+            };
+        } else {
+            var icon = {
+                url: result.slice(3), // url
+                scaledSize: new google.maps.Size(50, 50), // scaled size
+            };
+        }
+        map.setCenter({ lat: myLat, lng: myLong });
+        new google.maps.Marker({
+            map: map,
+            icon: icon,
+            position: new google.maps.LatLng(myLat, myLong),
+            animation: google.maps.Animation.BOUNCE
+        });
     });
 }
 
@@ -162,23 +175,11 @@ function initLayers() {
 
                     notificationVote(notif.id, voteValue).done(function (res) {
                         Materialize.toast("Thanks for voting!", 2000, "rounded");
+
                     }).fail(function (res) {
                         console.log(res.responseText);
                     });
-                });
-
-                // Button from infoWindow that opens the notification edition modal window
-                $('#editNotif').click(function () {
-                    clearForm();
-                    $('#optionalSearchInput').hide();
-                    $('.createMode').hide();
-                    $('.editMode').show();
-                    $('#addNotif').css("height", "55%").modal('open');
-                    $('#descEvent').text(notif.desc);
-                    $('#'+notif.type+'.typeSelection').addClass('active');
-                    $('#resultType').val(notif.type);
-                    $('#dateInput').val(notif.date);
-                    $('#timeInput').val(notif.time);
+                    $(this).parent().hide();
                 });
             });
 

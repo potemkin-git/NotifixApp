@@ -12,7 +12,6 @@
                     break
             }
         });
-
     } else {
             $("#passwordErrorMsg").text("You must enter your email").show();
     }

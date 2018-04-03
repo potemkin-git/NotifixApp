@@ -183,6 +183,7 @@ textarea {
 .button-block {
     display: block;
     width: 100%;
+    font-size: 1.1rem;
 }
 
 .forgot {
